@@ -6,33 +6,20 @@ public class StarShip {
 	private int x, y; // 飛船的位置
 	private static final int WIDTH = 20; // 飛船寬度
 	private static final int HEIGHT = 20; // 飛船高度
-	private static final int MOVE_SPEED = 10; // 飛船移動速度
 
 	public StarShip(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	/** 向左移動飛船 */
-	public void moveLeft() {
-		x -= MOVE_SPEED;
+	public void setX(int x) {
+		this.x = x;
 	}
 
-	/** 向右移動飛船 */
-	public void moveRight() {
-		x += MOVE_SPEED;
+	public void setY(int y) {
+		this.y = y;
 	}
-
-	/** 向上移動飛船 */
-	public void moveUp() {
-		y -= MOVE_SPEED;
-	}
-
-	/** 向下移動飛船 */
-	public void moveDown() {
-		y += MOVE_SPEED;
-	}
-
+	
 	public int getX() {
 		return x;
 	}
