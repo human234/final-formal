@@ -16,20 +16,21 @@ import java.util.Iterator;
 
 public class SpaceInvader_panel extends JPanel
 		implements ActionListener, MouseMotionListener, MouseListener {
-	// è¨­å®šéŠæˆ²é¢æ¿å¤§å°
+	// ³]©w¹CÀ¸­±ªO¤j¤p
 	private static final int PANEL_WIDTH = 800;
 	private static final int PANEL_HEIGHT = 600;
 
 	private BufferedImage myImage;
 	private Graphics myBuffer;
-	private StarShip starShip; // é£›èˆ¹
-	private List<Bullet> bullets; // å­å½ˆé›†åˆ
+	private StarShip starShip; // ­¸²î
+	private List<Bullet> bullets; // ¤l¼u¶°¦X
+	private List<EnemyBullet> enemyBullets;// ¼Ä¤H¤l¼u¶°¦X
 	private Iterator<Bullet> bulletIterator;
-	private List<Enemy> enemies; // æ•µäººé›†åˆ
+	private Iterator<EnemyBullet> enemyBulletsIterator;
+	private List<Enemy> enemies; // ¼Ä¤H¶°¦X
 	private Iterator<Enemy> enemyIterator;
-	private Timer timer, timer_hold; // éŠæˆ²è¨ˆæ™‚å™¨ï¼Œç”¨æ–¼æ›´æ–°ç•«é¢
-	private int score; // å¾—åˆ†
-
+	private Timer timer, timer_hold; // ¹CÀ¸­p®É¾¹¡A¥Î©ó§ó·sµe­±
+	private int score; // ±o¤À
 	public SpaceInvader_panel() {
 		
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -40,11 +41,13 @@ public class SpaceInvader_panel extends JPanel
 		initSetting();
 		myImage = new BufferedImage(PANEL_WIDTH, PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		myBuffer = myImage.getGraphics();
-		// åŸºæœ¬ç‰©ä»¶
-		starShip = new StarShip(PANEL_WIDTH / 2, PANEL_HEIGHT - 30); // èµ·å§‹ä½ç½®è¨­å®š
+		// °ò¥»ª«¥ó
+		starShip = new StarShip(PANEL_WIDTH / 2, PANEL_HEIGHT - 30); // °_©l¦ì¸m³]©w
+		enemyBullets = new ArrayList<>();
 		bullets = new ArrayList<Bullet>();
 		enemies = new ArrayList<Enemy>();
-		// åˆå§‹åŒ–æ•µäººï¼Œæ’åˆ—åœ¨ä¸Šæ–¹
+		Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
+		// ªì©l¤Æ¼Ä¤H¡A±Æ¦C¦b¤W¤è
 		int startX = 20;
 		int startY = 50;
 		int numEnemies = 8;
@@ -53,10 +56,11 @@ public class SpaceInvader_panel extends JPanel
 			enemies.add(new Enemy(startX + i * spacing, startY));
 		}
 		score = 0;
-		// è¨­ç½®è¨ˆæ™‚å™¨ï¼Œæ¯15æ¯«ç§’åŸ·è¡Œä¸€æ¬¡å‹•ä½œ (å¤§ç´„66 FPS)
+		// ³]¸m­p®É¾¹¡A¨C15²@¬í°õ¦æ¤@¦¸°Ê§@ (¤j¬ù66 FPS)
 		timer = new Timer(10, this);
-		timer_hold = new Timer(60, e -> spawnBullet());
+		timer_hold = new Timer(80, e -> spawnBullet());
 		timer.start();
+		
 	}
 
 	public void initSetting() {
@@ -87,6 +91,7 @@ public class SpaceInvader_panel extends JPanel
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		
 		spawnBullet();
 		timer_hold.start();
 	}
@@ -94,7 +99,7 @@ public class SpaceInvader_panel extends JPanel
 	public void spawnBullet() {
 		bullets.add(new Bullet(starShip.getX(), starShip.getY()));
 	}
-
+	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		timer_hold.stop();
@@ -114,16 +119,30 @@ public class SpaceInvader_panel extends JPanel
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		for (Enemy enemy : enemies) {
+	        if (Math.random() < 0.01) { // ¨C¤@´V¦³ 1% ¾÷²vµo®g
+	        	enemyBullets.add(new EnemyBullet(enemy.getX(), enemy.getY())); 
+	        }
+	    }
 
-		posRefresh(); // æ›´æ–°æ•µäººä½ç½®
-		collision(); // ç¢°æ’æª¢æ¸¬
-		drawImage(); // ç•«åœ–
+	    // ²¾°Ê¼Ä¤H¤l¼u
+	    Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
+	    while (enemyBulletIterator.hasNext()) {
+	        EnemyBullet bullet = enemyBulletIterator.next();
+	        bullet.move();
+	        if (bullet.isOutOfScreen()) {
+	            enemyBulletIterator.remove();
+	        }
+	    }
+		posRefresh(); // §ó·s¼Ä¤H¦ì¸m
+		collision(); // ¸I¼²ÀË´ú
+		drawImage(); // µe¹Ï
 		repaint();
 
 	}
 
 	public void posRefresh() {
-		// æ›´æ–°å­å½ˆä½ç½®ï¼Œä¸¦ç§»é™¤è¶…å‡ºè¢å¹•å¤–çš„å­å½ˆ
+		// §ó·s¤l¼u¦ì¸m¡A¨Ã²¾°£¶W¥X¿Ã¹õ¥~ªº¤l¼u
 		bulletIterator = bullets.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
@@ -132,14 +151,17 @@ public class SpaceInvader_panel extends JPanel
 				bulletIterator.remove();
 			}
 		}
-		// æ›´æ–°æ•µäººä½ç½®
-		for (Enemy enemy : enemies) {
-			enemy.move();
-		}
-	}
+		// §ó·s¼Ä¤H¦ì¸m
+		for (Enemy enemy : enemies) {			
+	        enemy.randomMove();
+	        }
+			
+			
+        }   	
+
 
 	public void collision() {
-		// æª¢æŸ¥å­å½ˆèˆ‡æ•µäººç¢°æ’
+		// ÀË¬d¤l¼u»P¼Ä¤H¸I¼²
 		bulletIterator = bullets.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
@@ -159,7 +181,7 @@ public class SpaceInvader_panel extends JPanel
 	public void drawImage() {
 		myBuffer.setColor(Color.black);
 		myBuffer.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-		// ç¹ªè£½å¾—åˆ†
+		// Ã¸»s±o¤À
 		myBuffer.setColor(Color.WHITE);
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
@@ -169,6 +191,9 @@ public class SpaceInvader_panel extends JPanel
 		}
 		for (Enemy en : enemies) {
 			en.drawShape(myBuffer);
+		}
+		for (EnemyBullet  eb : enemyBullets) {
+		    eb.drawShape(myBuffer); // µe¼Ä¤H¤l¼u
 		}
 		starShip.drawShape(myBuffer);
 	}

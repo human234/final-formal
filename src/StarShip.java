@@ -1,17 +1,26 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.io.File;
 
 public class StarShip {
-	private int x, y; // é£›èˆ¹çš„ä½ç½®
-	private static final int WIDTH = 20; // é£›èˆ¹å¯¬åº¦
-	private static final int HEIGHT = 20; // é£›èˆ¹é«˜åº¦
-
+	private int x, y; // ­¸²îªº¦ì¸m
+	private static final int WIDTH = 20; // ­¸²î¼e«×
+	private static final int HEIGHT = 20; // ­¸²î°ª«×
+	private BufferedImage image; //­¸²î¹Ï¤ù
+	
 	public StarShip(int x, int y) {
 		this.x = x;
 		this.y = y;
-	}
 
+		try {
+			image = ImageIO.read(getClass().getResourceAsStream("/starship.png")); // ©Î¥Î getResourceAsStream ¸ü¤J¸ê·½
+		} catch (IOException e) {
+			System.err.println("¸ü¤J¹Ï¤ù¥¢±Ñ: " + e.getMessage());
+		}
+	}
 	public void setX(int x) {
 		this.x = x;
 	}
@@ -36,11 +45,15 @@ public class StarShip {
 		return HEIGHT;
 	}
 
-	// ç¹ªè£½é£›èˆ¹
 	public void drawShape(Graphics g) {
-		g.setColor(Color.GRAY);
-		int[] x_outline = { getX() - WIDTH / 2, getX(), getX() + WIDTH / 2};
-		int[] y_outline = { getY() + HEIGHT / 2, getY() - HEIGHT / 2, getY() + HEIGHT / 2};
-		g.fillPolygon(x_outline, y_outline, 3);
+		if (image != null) {
+			g.drawImage(image, x - image.getWidth() / 2, y - image.getHeight() / 2, null);
+		} else {
+			// ­Y¹Ï¤ù¸ü¤J¥¢±Ñ«hÅã¥Ü¦Ç¦â¤T¨¤§Î
+			g.setColor(Color.GRAY);
+			int[] x_outline = { getX() - WIDTH / 2, getX(), getX() + WIDTH / 2 };
+			int[] y_outline = { getY() + HEIGHT / 2, getY() - HEIGHT / 2, getY() + HEIGHT / 2 };
+			g.fillPolygon(x_outline, y_outline, 3);
+		}
 	}
 }
