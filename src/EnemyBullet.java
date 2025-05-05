@@ -12,7 +12,7 @@ public class EnemyBullet {
     private int x, y; // 子彈的位置
     private static final int WIDTH = 5; // 子彈寬度
     private static final int HEIGHT = 10; // 子彈高度
-    private static final int SPEED = 5; // 子彈移動速度
+    private static final int SPEED = 3; // 子彈移動速度
     private BufferedImage image; //子彈圖片
 	
 	public EnemyBullet(int x, int y) {

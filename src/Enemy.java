@@ -8,8 +8,9 @@ import javax.swing.Timer;
 
 
 public class Enemy {
-	private int x, y; // 敵人的位置
-	private int dx = 2; // 水平移動速度
+	private int y = 40; // 敵人y座標
+	private int x;// 敵人x座標(隨機)
+	private int dx = (int) (1 + (Math.random() * 2)); // 水平移動速度(1~2)
 	private static final int WIDTH = 20; // 敵人寬度
 	private static final int HEIGHT = 20; // 敵人高度
 	private static final int DROP = 20; // 每次撞到邊界掉落的距離
@@ -24,7 +25,7 @@ public class Enemy {
 	public Enemy(int x, int y) {
 	    this.x = x;
 	    this.y = y;
-	    this.direction = (int)(Math.random() * 4); // 0~3 隨機方向
+	    this.direction = (int)(Math.random() * 8); // 0~3 隨機方向
 	    this.moveInterval = 300 + (int)(Math.random() * 100); // 每幾幀移動
 	    this.moveCounter = 0;
 	}
@@ -71,22 +72,35 @@ public class Enemy {
 	
 	public void randomMove() {
 	    moveCounter++;
-//	    System.out.println("--------------");
-//	    System.out.println(moveCounter);
-//	    System.out.println(moveInterval);
-//	    System.out.println("--------------");
+	    System.out.println(direction);
 	    if (moveCounter >= moveInterval) {
-	        direction = (int)(Math.random() * 4); // 每次更新方向
+	        direction = (int)(Math.random() * 8); // 每次更新方向
 	        moveCounter = 0;
 	    }
-	    if (direction == 0)
+	    if (direction == 0)//向上
 	    	move_up();
-	    if (direction == 1)
+	    if (direction == 1)//向下
 	    	move_down();
-	    if (direction == 2)
+	    if (direction == 2)//向左
 	    	move_left();
-	    if (direction == 3)
+	    if (direction == 3)//向右
 	    	move_right();
+	    if (direction == 4){//向右上
+	    	move_up();
+	    	move_right();
+	    }
+	    if (direction == 5){//向右下
+	    	move_down();
+	    	move_right();
+	    }
+	    if (direction == 6){//向左上
+	    	move_up();
+	    	move_left();
+	    }
+	    if (direction == 7){//向左下
+	    	move_down();
+	    	move_left();
+	    }
 	}
 	
 
