@@ -48,12 +48,12 @@ public class SpaceInvader_panel extends JPanel
 		enemies = new ArrayList<Enemy>();
 		Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
 		// 初始化敵人，排列在上方
-		int startX = 20;
+		int startX ;
 		int startY = 50;
 		int numEnemies = 8;
-		int spacing = 40;
 		for (int i = 0; i < numEnemies; i++) {
-			enemies.add(new Enemy(startX + i * spacing, startY));
+			startX = (int) (1 + (Math.random() * 801));
+			enemies.add(new Enemy(startX, startY));
 		}
 		score = 0;
 		// 設置計時器，每15毫秒執行一次動作 (大約66 FPS)
