@@ -12,7 +12,7 @@ import panelRelated.Setting;
 public class Triangle extends Enemy implements Shottable {
 
 	private int dx, count;
-
+	private int attack;
 	public static final int WIDTH = 20, HEIGHT = 20;
 
 	public Triangle() {
@@ -42,13 +42,13 @@ public class Triangle extends Enemy implements Shottable {
 	}
 
 	public void move() {
+		count++;
 		if (x < 100) {
-			dx = 2;
+			dx = (int) (Math.random() * 2 + 1);
 		} else if (x > Setting.PANEL_WIDTH - 100) {
-			dx = -2;
+			dx = -1 * (int) (Math.random() * 2 + 1);
 		}
 		x += dx;
-		count++;
 	}
 
 	@Override
@@ -58,9 +58,19 @@ public class Triangle extends Enemy implements Shottable {
 
 	@Override
 	public void shot(List<Bullet> bullets) {
-		if (count == 100) {
-			bullets.add(new Bullet(x, y, 10, Color.orange));
+		if (count == 20) {
+			attack = (int) (Math.random() * 10);
 			count = 0;
+		}
+		if (attack == 9) {
+			try {
+				bullets.add(new Bullet(x, y, -1, 2, 2));
+				bullets.add(new Bullet(x, y, 0, 2, 2));
+				bullets.add(new Bullet(x, y, 1, 2, 2));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			attack = 0;
 		}
 	}
 

@@ -1,39 +1,57 @@
 package gameObject;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 
 public class Bullet {
-	public Color myColor;
-	public int x, y, dy; // å­�å½ˆçš„ä½�ç½®
-	public static final int WIDTH = 5; // å­�å½ˆå¯¬åº¦
-	public static final int HEIGHT = 10; // å­�å½ˆé«˜åº¦
+	public int x, y, dx, dy;
+	public static final int WIDTH = 5;
+	public static final int HEIGHT = 10;
+	private Image image;
 
-	public Bullet(int x, int y, int dy, Color color) {
-		myColor = color;
+	public Bullet(int x, int y, int dx, int dy, int type) {
 		this.x = x;
 		this.y = y;
+		this.dx = dx;
 		this.dy = dy;
+		if (type == 1) {
+			try {
+				image = ImageIO.read(getClass().getResourceAsStream("/bullet.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else if (type == 2) {
+			try {
+				image = ImageIO.read(getClass().getResourceAsStream("/enemybullet.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			image = null;
+		}
+
 	}
 
 	public void move() {
+		x += dx;
 		y += dy;
 	}
 
-	// å�–å¾—å­�å½ˆçš„é‚Šç•ŒçŸ©å½¢ï¼Œç”¨æ–¼ç¢°æ’žæª¢æ¸¬
 	public Rectangle getBounds() {
-		return new Rectangle(x, y, WIDTH, HEIGHT);
+		return new Rectangle(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 	}
 
-	// å­�å½ˆæ˜¯å�¦å·²ç¶“é£›å‡ºèž¢å¹•
-	public boolean isOutOfScreen() {
-		return y + HEIGHT < 0;
-	}
-
-	// ç¹ªè£½å­�å½ˆ
 	public void drawShape(Graphics g) {
-		g.setColor(myColor);
-		g.fillRect(x, y, WIDTH, HEIGHT);
+		if (image != null) {
+			g.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+		} else {
+			g.setColor(Color.yellow);
+			g.fillRect(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+		}
 	}
 }

@@ -39,7 +39,7 @@ public class StartScreenPanel extends JPanel {
 	}
 
 	public void switchPanel() {
-		frame.setContentPane(new SpaceInvader_panel(frame));
+		frame.setContentPane(new SpaceInvaderPanel(frame));
 		frame.revalidate();
 	}
 }
