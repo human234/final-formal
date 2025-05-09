@@ -30,7 +30,7 @@ public class StartScreenPanel extends JPanel {
 		button.setContentAreaFilled(false);
 		button.setBorderPainted(false);
 		button.setFocusPainted(false);
-		button.setBounds(70, Setting.PANEL_HEIGHT - 400, 200, 200); // 定位按鈕
+		button.setBounds(70, Setting.PANEL_HEIGHT - 400, 200, 200); 
 		button.addActionListener(e -> switchPanel());
 
 		backgroundLabel.add(button);

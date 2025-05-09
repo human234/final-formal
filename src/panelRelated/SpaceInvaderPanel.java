@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import abstract_interface.Creature;
 import abstract_interface.Enemy;
+import abstract_interface.Shottable;
 import gameObject.*;
 
 import java.awt.Graphics;
@@ -34,9 +34,8 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	private List<Enemy> enemies;
 	private Iterator<Enemy> enemyIterator;
 	private List<Explosion> explosions;
-	private Iterator<Explosion> explosionIterator;
-	private Timer timer, timer_hold, timer_triangle, timer_square, timer_tomato;
-	private int score, delay = 10, count = 0;
+	private Timer timer, timer_hold, timer_enemy;
+	private int score, count;
 
 	public SpaceInvaderPanel(JFrame frame) {
 
@@ -47,6 +46,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		addMouseMotionListener(this);
 		myImage = new BufferedImage(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		myBuffer = myImage.getGraphics();
+		Explosion.loadFrames();
 
 		starShip = new StarShip(Setting.PANEL_WIDTH / 2, Setting.PANEL_HEIGHT - 30);
 		bullets = new ArrayList<Bullet>();
@@ -58,35 +58,26 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 		timer = new Timer(16, this);
 		timer.start();
+		timer_enemy = new Timer(200, e -> spawnEnemy());
+		timer_enemy.start();
+		count = 0;
 		timer_hold = new Timer(60, e -> starShip.shot(bullets));
-		timer_triangle = new Timer(3000, e -> spawntriangle());
-		timer_triangle.start();
-		timer_square = new Timer(100, e -> spawnSquare());
-		timer_square.start();
-		timer_tomato = new Timer(2000, e -> spawnTomato());
-		timer_tomato.start();
 	}
 
-	public void spawntriangle() {
-		for (int i = 0; i < 2; i++) {
+	public void spawnEnemy() {
+		count++;
+		if (count == 15 || count == 20) {
 			enemies.add(new Triangle());
 		}
-	}
-
-	public void spawnSquare() {
-		if (count < 5) {
+		if (count <= 5) {
 			enemies.add(new Square());
-			count++;
-		} else if (delay != 0) {
-			delay--;
-		} else if (delay == 0) {
-			count = 0;
-			delay = 40;
 		}
-	}
-
-	public void spawnTomato() {
-		enemies.add(new Round());
+		if (count % 10 == 0) {
+			enemies.add(new Round());
+		}
+		if (count == 20) {
+			count = 0;
+		}
 	}
 
 	@Override
@@ -165,10 +156,8 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		while (enemyIterator.hasNext()) {
 			Enemy enemy = enemyIterator.next();
 			enemy.act();
-			if (enemy instanceof Triangle) {
-				((Triangle) enemy).shot(bulletsEne);
-			} else if (enemy instanceof Round) {
-				((Round) enemy).shot(bulletsEne);
+			if (enemy instanceof Shottable) {
+				((Shottable) enemy).shot(bulletsEne);
 			}
 		}
 	}
@@ -228,7 +217,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
 		starShip.drawShape(myBuffer);
-		
+
 		for (Bullet bullet : bulletsEne) {
 			bullet.drawShape(myBuffer);
 		}
@@ -252,9 +241,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 		timer.stop();
 		timer_hold.stop();
-		timer_triangle.stop();
-		timer_square.stop();
-		timer_tomato.stop();
+		timer_enemy.stop();
 
 		frame.setContentPane(new GameOverPanel(frame));
 		frame.revalidate();
