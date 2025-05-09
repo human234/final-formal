@@ -26,9 +26,9 @@ public class Explosion {
         }
     }
 
-    private void loadFrames() {
+    public static void loadFrames() {
         try {
-            BufferedImage spriteSheet = ImageIO.read(getClass().getResource("/explosion2.png"));
+            BufferedImage spriteSheet = ImageIO.read(Explosion.class.getResource("/explosion2.png"));
             explosionFrames = new BufferedImage[TOTAL_FRAMES];
             for (int i = 0; i < TOTAL_FRAMES; i++) {
                 int col = i % SPRITE_COLS;

@@ -11,11 +11,11 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import abstract_interface.Creature;
 import abstract_interface.Shottable;
 
-public class StarShip extends Creature implements Shottable {
+public class StarShip implements Shottable {
 
+	public int x, y, health;
 	public static final int WIDTH = 20, HEIGHT = 20;
 	private Image image;
 
@@ -30,7 +30,6 @@ public class StarShip extends Creature implements Shottable {
 		}
 	}
 
-	@Override
 	public void drawShape(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		if (image != null) {
@@ -51,17 +50,14 @@ public class StarShip extends Creature implements Shottable {
 		bullets.add(new Bullet(x, y, 0, -10, 1));
 	}
 
-	@Override
 	public Rectangle getBounds() {
 		return new Rectangle(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 	}
 
-	@Override
 	public void gotDamaged() {
 		health--;
 	}
 
-	@Override
 	public boolean alive() {
 		return health > 0;
 	}

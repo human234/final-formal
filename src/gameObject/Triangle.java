@@ -66,9 +66,9 @@ public class Triangle extends Enemy implements Shottable {
 		}
 		if (attack == 9) {
 			try {
-				bullets.add(new Bullet(x, y, -1, 2, 2));
-				bullets.add(new Bullet(x, y, 0, 2, 2));
-				bullets.add(new Bullet(x, y, 1, 2, 2));
+				bullets.add(new Bullet(x, y, -1, 3, 2));
+				bullets.add(new Bullet(x, y, 0, 3, 2));
+				bullets.add(new Bullet(x, y, 1, 3, 2));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
