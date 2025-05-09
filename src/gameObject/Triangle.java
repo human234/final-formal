@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.List;
 
+import abstract_interface.Enemy;
+import abstract_interface.Shottable;
 import panelRelated.Setting;
 
 public class Triangle extends Enemy implements Shottable {
@@ -41,7 +43,7 @@ public class Triangle extends Enemy implements Shottable {
 		g2d.drawPolygon(x_outline, y_outline, 3);
 	}
 
-	public void move() {
+	public void act() {
 		count++;
 		if (x < 100) {
 			dx = (int) (Math.random() * 2 + 1);

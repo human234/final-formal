@@ -5,16 +5,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-
-import javax.swing.Timer;
-
+import abstract_interface.Enemy;
 import panelRelated.Setting;
 
 public class Square extends Enemy {
 
 	private int dx;
 	private double dy;
-	public static final int WIDTH = 30;
+	public static final int WIDTH = 30, HEIGHT = 30;
 	private boolean dir;
 
 	public Square() {
@@ -31,7 +29,7 @@ public class Square extends Enemy {
 		dy = 0.15;
 	}
 
-	public void move() {
+	public void act() {
 		if (x + WIDTH / 2 >= Setting.PANEL_WIDTH && dir) {
 			dx *= -1;
 			dir = !dir;
@@ -50,16 +48,16 @@ public class Square extends Enemy {
 	}
 
 	public Rectangle getBounds() {
-		return new Rectangle(x - WIDTH / 2, y - WIDTH / 2, WIDTH, WIDTH);
+		return new Rectangle(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 	}
 
 	public void drawShape(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(4));
 		g2d.setColor(Color.RED);
-		g2d.fillRect(x - WIDTH / 2, y - WIDTH / 2, WIDTH, WIDTH);
+		g2d.fillRect(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 		g2d.setColor(Color.black);
-		g2d.drawRect(x - WIDTH / 2, y - WIDTH / 2, WIDTH, WIDTH);
+		g2d.drawRect(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 	}
 
 	@Override
