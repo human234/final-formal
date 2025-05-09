@@ -5,15 +5,16 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.List;
 
+import abstract_interface.Enemy;
+import abstract_interface.Shottable;
 import panelRelated.Setting;
 
 public class Round extends Enemy implements Shottable {
 	private int dx, dy;
-	private static final int WIDTH = 40;
-	private static final int HEIGHT = 40;
+	public static final int WIDTH = 40;
+	public static final int HEIGHT = 40;
 	private int chDirCount, shotCount, chDirInterval;
 	private boolean firstStep;
 
@@ -37,7 +38,7 @@ public class Round extends Enemy implements Shottable {
 	}
 
 	@Override
-	public void move() {
+	public void act() {
 		shotCount++;
 		chDirCount++;
 		if (chDirCount >= chDirInterval) {

@@ -16,7 +16,6 @@ public class GameOverPanel extends JPanel implements ActionListener {
 	public GameOverPanel(JFrame frame) {
 		this.frame = frame;
 		setPreferredSize(new Dimension(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT));
-		setFocusable(true);
 
 		try {
 			gameOverImage = ImageIO.read(getClass().getResource("/game_over.png"));
@@ -32,14 +31,10 @@ public class GameOverPanel extends JPanel implements ActionListener {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		g.setColor(Color.BLACK);
+		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
-
-		int imgX = (getWidth() - gameOverImage.getWidth()) / 2;
-		int imgY = (getHeight() - gameOverImage.getHeight()) / 2;
-		g.drawImage(gameOverImage, imgX, imgY, this);
+		g.drawImage(gameOverImage, (int) (getWidth() * 0.33), (int) (getHeight() * 0.33), (int) (getWidth() * 0.33),
+				(int) (getHeight() * 0.33), null);
 	}
 
 	@Override

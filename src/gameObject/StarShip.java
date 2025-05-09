@@ -6,21 +6,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-public class StarShip implements Shottable {
+import abstract_interface.Creature;
+import abstract_interface.Shottable;
 
-	private int health = 30;
-	public int x, y;
+public class StarShip extends Creature implements Shottable {
+
 	public static final int WIDTH = 20, HEIGHT = 20;
 	private Image image;
 
 	public StarShip(int x, int y) {
+		health = 10;
 		this.x = x;
 		this.y = y;
 		try {
@@ -30,11 +30,12 @@ public class StarShip implements Shottable {
 		}
 	}
 
+	@Override
 	public void drawShape(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		if(image != null) {
+		if (image != null) {
 			g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-		}else {
+		} else {
 			g2d.setStroke(new BasicStroke(4));
 			g2d.setColor(Color.GRAY);
 			int[] x_outline = { x - WIDTH / 2, x, x + WIDTH / 2 };
@@ -50,14 +51,17 @@ public class StarShip implements Shottable {
 		bullets.add(new Bullet(x, y, 0, -10, 1));
 	}
 
+	@Override
 	public Rectangle getBounds() {
 		return new Rectangle(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 	}
 
+	@Override
 	public void gotDamaged() {
 		health--;
 	}
 
+	@Override
 	public boolean alive() {
 		return health > 0;
 	}

@@ -4,9 +4,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import abstract_interface.Creature;
+import abstract_interface.Enemy;
 import gameObject.*;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -22,9 +25,6 @@ import java.util.Iterator;
 
 public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMotionListener, MouseListener {
 
-	private static final int PANEL_WIDTH = 800;
-	private static final int PANEL_HEIGHT = 600;
-
 	private JFrame frame;
 	private BufferedImage myImage;
 	private Graphics myBuffer;
@@ -33,27 +33,30 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	private Iterator<Bullet> bulletIterator;
 	private List<Enemy> enemies;
 	private Iterator<Enemy> enemyIterator;
+	private List<Explosion> explosions;
+	private Iterator<Explosion> explosionIterator;
 	private Timer timer, timer_hold, timer_triangle, timer_square, timer_tomato;
 	private int score, delay = 10, count = 0;
 
 	public SpaceInvaderPanel(JFrame frame) {
 
 		this.frame = frame;
-		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		setPreferredSize(new Dimension(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT));
 		setFocusable(true);
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		myImage = new BufferedImage(PANEL_WIDTH, PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
+		myImage = new BufferedImage(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		myBuffer = myImage.getGraphics();
 
-		starShip = new StarShip(PANEL_WIDTH / 2, PANEL_HEIGHT - 30);
+		starShip = new StarShip(Setting.PANEL_WIDTH / 2, Setting.PANEL_HEIGHT - 30);
 		bullets = new ArrayList<Bullet>();
 		bulletsEne = new ArrayList<Bullet>();
 		enemies = new ArrayList<Enemy>();
+		explosions = new ArrayList<Explosion>();
 
 		score = 0;
 
-		timer = new Timer(10, this);
+		timer = new Timer(16, this);
 		timer.start();
 		timer_hold = new Timer(60, e -> starShip.shot(bullets));
 		timer_triangle = new Timer(3000, e -> spawntriangle());
@@ -88,7 +91,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		g.drawImage(myImage, 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
+		g.drawImage(myImage, 0, 0, getWidth(), getHeight(), null);
 	}
 
 	public void mouseDragged(MouseEvent e) {
@@ -161,7 +164,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		enemyIterator = enemies.iterator();
 		while (enemyIterator.hasNext()) {
 			Enemy enemy = enemyIterator.next();
-			enemy.move();
+			enemy.act();
 			if (enemy instanceof Triangle) {
 				((Triangle) enemy).shot(bulletsEne);
 			} else if (enemy instanceof Round) {
@@ -178,6 +181,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 			while (enemyIterator.hasNext()) {
 				Enemy enemy = enemyIterator.next();
 				if (enemy.getBounds().intersects(bullet.getBounds())) {
+					addExplosion(enemy.getBounds().intersection(bullet.getBounds()));
 					bulletIterator.remove();
 					enemy.gotDamaged();
 					if (!enemy.alive()) {
@@ -192,11 +196,10 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		enemyIterator = enemies.iterator();
 		while (enemyIterator.hasNext()) {
 			Enemy enemy = enemyIterator.next();
-			if (!(enemy instanceof Triangle)) {
-				if (enemy.getBounds().intersects(starShip.getBounds())) {
-					starShip.gotDamaged();
-					enemyIterator.remove();
-				}
+			if (enemy.getBounds().intersects(starShip.getBounds())) {
+				addExplosion(enemy.getBounds().intersection(starShip.getBounds()));
+				starShip.gotDamaged();
+				enemyIterator.remove();
 			}
 		}
 
@@ -204,10 +207,13 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
 			if (bullet.getBounds().intersects(starShip.getBounds())) {
+				addExplosion(bullet.getBounds().intersection(starShip.getBounds()));
 				bulletIterator.remove();
 				starShip.gotDamaged();
 			}
 		}
+
+		explosions.removeIf(Explosion::shouldRemove);
 
 		if (!starShip.alive()) {
 			endGame();
@@ -217,22 +223,26 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 	public void drawImage() {
 		myBuffer.setColor(Color.DARK_GRAY);
-		myBuffer.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+		myBuffer.fillRect(0, 0, getWidth(), getHeight());
 		myBuffer.setColor(Color.WHITE);
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
-
-		for (Bullet b : bulletsEne) {
-			b.drawShape(myBuffer);
-		}
-		for (Bullet b : bullets) {
-			b.drawShape(myBuffer);
-		}
-		for (Enemy en : enemies) {
-			en.drawShape(myBuffer);
-		}
-
 		starShip.drawShape(myBuffer);
+		
+		for (Bullet bullet : bulletsEne) {
+			bullet.drawShape(myBuffer);
+		}
+		for (Bullet bullet : bullets) {
+			bullet.drawShape(myBuffer);
+		}
+		for (Enemy enemy : enemies) {
+			enemy.drawShape(myBuffer);
+		}
+		for (Explosion explosion : explosions) {
+			explosion.render(myBuffer);
+			explosion.update();
+		}
+
 	}
 
 	public void endGame() {
@@ -248,5 +258,10 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 		frame.setContentPane(new GameOverPanel(frame));
 		frame.revalidate();
+	}
+
+	public void addExplosion(Rectangle intersection) {
+		explosions
+				.add(new Explosion(intersection.x + intersection.width / 2, intersection.y + intersection.height / 2));
 	}
 }
