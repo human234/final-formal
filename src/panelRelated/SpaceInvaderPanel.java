@@ -216,11 +216,14 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	public void drawImage() {
 
 		parallax.drawShape(myBuffer);
+
 		myBuffer.setColor(Color.white);
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
 		starShip.drawShape(myBuffer);
-		
+
+		healthDisplay(myBuffer);
+
 		for (Bullet bullet : bulletsEne) {
 			bullet.drawShape(myBuffer);
 		}
@@ -256,14 +259,37 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	}
 
 	public void load() {
-		String[] bkPaths = {"/parallax-space-backgound.png","/parallax-space-stars.png"};
-		float[] bkSpeeds = {2.2f, 4.3f};
-		parallax = new ParallaxBackground( bkPaths, bkSpeeds);
+		String[] bkPaths = { "/parallax-space-backgound.png", "/parallax-space-stars.png" };
+		float[] bkSpeeds = { 2.2f, 4.3f };
+		parallax = new ParallaxBackground(bkPaths, bkSpeeds);
 		parallax.addObject("/parallax-space-big-planet.png", 2.1f, 3.2f, 200, 180);
 		parallax.addObject("/parallax-space-ring-planet.png", 3.2f, 2.4f, 120, 240);
 		parallax.addObject("/parallax-space-far-planets.png", 5.3f, 2.6f, 300, 140);
 		Round.loadFrams();
 		Square.loadFrams();
 		Triangle.loadFrams();
+	}
+
+	public void healthDisplay(Graphics g) {
+		// 血條底框（灰色）
+		myBuffer.setColor(Color.GRAY);
+		myBuffer.fillRect(10, 30, 100, 10);
+
+		// 根據血量計算比例
+		int hpWidth = Math.max(0, Math.min(starShip.health, 100)); // 限制在 0~100
+		Color hpColor = Color.GREEN;
+		if (hpWidth <= 30)
+			hpColor = Color.RED;
+		else if (hpWidth <= 60)
+			hpColor = Color.ORANGE;
+
+		// 血量條（變色）
+		myBuffer.setColor(hpColor);
+		myBuffer.fillRect(10, 30, hpWidth, 10);
+
+		// 白色外框與文字
+		myBuffer.setColor(Color.WHITE);
+		myBuffer.drawRect(10, 30, 100, 10);
+		myBuffer.drawString("HP: " + starShip.health, 115, 40);
 	}
 }

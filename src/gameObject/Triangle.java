@@ -103,15 +103,15 @@ public class Triangle extends Enemy implements Shottable {
 
 	@Override
 	public void shot(List<Bullet> bullets) {
-		if (count == 20) {
+		if (count == 10) {
 			attack = (int) (Math.random() * 10);
 			count = 0;
 		}
 		if (attack == 9) {
 			try {
-				bullets.add(new Bullet(x, y, -1, 3, 2));
-				bullets.add(new Bullet(x, y, 0, 3, 2));
-				bullets.add(new Bullet(x, y, 1, 3, 2));
+				bullets.add(new Bullet(x, y, -1, 5, 2));
+				bullets.add(new Bullet(x, y, 0, 5, 2));
+				bullets.add(new Bullet(x, y, 1, 5, 2));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
