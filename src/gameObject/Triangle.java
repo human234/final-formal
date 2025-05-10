@@ -20,16 +20,18 @@ public class Triangle extends Enemy implements Shottable {
 
 	private int dx, count;
 	private int attack;
-	public static final int WIDTH = 20, HEIGHT = 20;
+
+	public static final int WIDTH = 32, HEIGHT = 32;
 	private static Image[] imageFrames;
-	
+	private int currentFrame = 0, frameDelayCount = 0;
+	private final int FRAME_DELAY = 32;
+
 	public static void loadFrams() {
 		try {
 			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ligher.png"));
-			imageFrames = new Image[4];
+			imageFrames = new BufferedImage[4];
 			for (int i = 0; i < 4; i++) {
-				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
-				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+				imageFrames[i] = spriteSheet.getSubimage(32 * i, 0, 32, 32);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,13 +55,35 @@ public class Triangle extends Enemy implements Shottable {
 	@Override
 	public void drawShape(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setStroke(new BasicStroke(4));
-		g2d.setColor(Color.GRAY);
-		int[] x_outline = { x - WIDTH / 2, x, x + WIDTH / 2 };
-		int[] y_outline = { y - HEIGHT / 2, y + HEIGHT / 2, y - HEIGHT / 2 };
-		g2d.fillPolygon(x_outline, y_outline, 3);
-		g2d.setColor(Color.red);
-		g2d.drawPolygon(x_outline, y_outline, 3);
+		if (imageFrames != null) {
+			render(g);
+			update();
+		} else {
+			g2d.setStroke(new BasicStroke(4));
+			g2d.setColor(Color.GRAY);
+			int[] x_outline = { x - WIDTH / 2, x, x + WIDTH / 2 };
+			int[] y_outline = { y - HEIGHT / 2, y + HEIGHT / 2, y - HEIGHT / 2 };
+			g2d.fillPolygon(x_outline, y_outline, 3);
+			g2d.setColor(Color.red);
+			g2d.drawPolygon(x_outline, y_outline, 3);
+		}
+	}
+
+	public void update() {
+		if (frameDelayCount < FRAME_DELAY) {
+			frameDelayCount++;
+		} else {
+			if (currentFrame < 3) {
+				currentFrame++;
+			} else {
+				currentFrame = 0;
+			}
+			frameDelayCount = 0;
+		}
+	}
+
+	public void render(Graphics g) {
+		g.drawImage(imageFrames[currentFrame], x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT, null);
 	}
 
 	public void act() {

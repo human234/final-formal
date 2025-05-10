@@ -64,7 +64,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		count = 0;
 		timer_hold = new Timer(60, e -> starShip.shot(bullets));
 
-		loadBackground();
+		load();
 	}
 
 	public void spawnEnemy() {
@@ -254,11 +254,11 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		explosions
 				.add(new Explosion(intersection.x + intersection.width / 2, intersection.y + intersection.height / 2));
 	}
-	
+
 	public void load() {
-		String[] bkPaths = { "/parallax-space-backgound.png", "/parallax-space-stars.png" };
-		float[] bkSpeeds = { 2.2f, 4.3f };
-		parallax = new ParallaxBackground(bkPaths, bkSpeeds);
+		String[] bkPaths = {"/parallax-space-backgound.png","/parallax-space-stars.png"};
+		float[] bkSpeeds = {2.2f, 4.3f};
+		parallax = new ParallaxBackground( bkPaths, bkSpeeds);
 		parallax.addObject("/parallax-space-big-planet.png", 2.1f, 3.2f, 200, 180);
 		parallax.addObject("/parallax-space-ring-planet.png", 3.2f, 2.4f, 120, 240);
 		parallax.addObject("/parallax-space-far-planets.png", 5.3f, 2.6f, 300, 140);

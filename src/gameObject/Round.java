@@ -18,24 +18,26 @@ import panelRelated.Setting;
 
 public class Round extends Enemy implements Shottable {
 	private int dx, dy;
-	public static final int WIDTH = 40;
-	public static final int HEIGHT = 40;
+	public static final int WIDTH = 32;
+	public static final int HEIGHT = 32;
 	private int chDirCount, shotCount, chDirInterval;
 	private boolean firstStep;
 	private static Image[] imageFrames;
-	
+	private int currentFrame = 0, frameDelayCount = 0;
+	private final int FRAME_DELAY = 32;
+
 	public static void loadFrams() {
 		try {
 			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ninja.png"));
-			imageFrames = new Image[4];
+			imageFrames = new BufferedImage[4];
 			for (int i = 0; i < 4; i++) {
-				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
-				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+				imageFrames[i] = spriteSheet.getSubimage(32 * i, 0, 32, 32);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public Round() {
 		firstStep = true;
 		health = 5;
@@ -101,12 +103,34 @@ public class Round extends Enemy implements Shottable {
 	}
 
 	public void drawShape(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setStroke(new BasicStroke(4));
-		g2d.setColor(Color.RED);
-		g2d.fillOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
-		g2d.setColor(Color.GRAY);
-		g2d.drawOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+		if (imageFrames != null) {
+			render(g);
+			update();
+		} else {
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setStroke(new BasicStroke(4));
+			g2d.setColor(Color.RED);
+			g2d.fillOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+			g2d.setColor(Color.GRAY);
+			g2d.drawOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+		}
+	}
+
+	public void update() {
+		if(frameDelayCount < FRAME_DELAY) {
+			frameDelayCount++;
+		}else {
+			if (currentFrame < 3) {
+				currentFrame++;
+			} else {
+				currentFrame = 0;
+			}
+			frameDelayCount = 0;
+		}
+	}
+
+	public void render(Graphics g) {
+		g.drawImage(imageFrames[currentFrame], x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT, null);
 	}
 
 	@Override
