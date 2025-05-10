@@ -20,7 +20,7 @@ public class StarShip implements Shottable {
 	private Image image;
 
 	public StarShip(int x, int y) {
-		health = 10;
+		health = 100;
 		this.x = x;
 		this.y = y;
 		try {
