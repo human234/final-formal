@@ -4,8 +4,13 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import abstract_interface.Enemy;
 import abstract_interface.Shottable;
@@ -16,6 +21,20 @@ public class Triangle extends Enemy implements Shottable {
 	private int dx, count;
 	private int attack;
 	public static final int WIDTH = 20, HEIGHT = 20;
+	private static Image[] imageFrames;
+	
+	public static void loadFrams() {
+		try {
+			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ligher.png"));
+			imageFrames = new Image[4];
+			for (int i = 0; i < 4; i++) {
+				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public Triangle() {
 		health = 3;
