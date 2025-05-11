@@ -8,9 +8,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.List;
-
 import javax.imageio.ImageIO;
-
 import abstract_interface.Shottable;
 
 public class StarShip implements Shottable {
@@ -18,7 +16,8 @@ public class StarShip implements Shottable {
 	public int x, y, health;
 	public static final int WIDTH = 20, HEIGHT = 20;
 	private Image image;
-	private int d = 1;
+	public static List<Bullet> bullets;
+
 	public StarShip(int x, int y) {
 		health = 100;
 		this.x = x;
@@ -111,7 +110,7 @@ public class StarShip implements Shottable {
 	}
 
 	@Override
-	public void shot(List<Bullet> bullets) {
+	public void shot() {
 		bullets.add(new Bullet(x - 6, y, 0, -10, 1));
 		bullets.add(new Bullet(x + 6, y, 0, -10, 1));
 	}

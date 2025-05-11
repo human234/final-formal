@@ -8,15 +8,11 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
-
 import javax.imageio.ImageIO;
-
-import abstract_interface.Enemy;
-import abstract_interface.Shottable;
+import abstract_interface.Shotter;
 import panelRelated.Setting;
 
-public class Round extends Enemy implements Shottable {
+public class Round extends Shotter {
 	private int dx, dy;
 	public static final int WIDTH = 50;
 	public static final int HEIGHT = 50;
@@ -118,9 +114,9 @@ public class Round extends Enemy implements Shottable {
 	}
 
 	public void update() {
-		if(frameDelayCount < FRAME_DELAY) {
+		if (frameDelayCount < FRAME_DELAY) {
 			frameDelayCount++;
-		}else {
+		} else {
 			if (currentFrame < 3) {
 				currentFrame++;
 			} else {
@@ -135,7 +131,7 @@ public class Round extends Enemy implements Shottable {
 	}
 
 	@Override
-	public void shot(List<Bullet> bullets) {
+	public void shot() {
 		if (shotCount == 40) {
 			int xDir, yDir;
 			if (dx > 0) {

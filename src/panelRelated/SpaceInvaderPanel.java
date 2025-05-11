@@ -3,11 +3,9 @@ package panelRelated;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
 import abstract_interface.Enemy;
-import abstract_interface.Shottable;
+import abstract_interface.Shotter;
 import gameObject.*;
-
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Color;
@@ -51,10 +49,11 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 		starShip = new StarShip(Setting.PANEL_WIDTH / 2, Setting.PANEL_HEIGHT - 30);
 		bullets = new ArrayList<Bullet>();
+		StarShip.bullets = bullets;
 		bulletsEne = new ArrayList<Bullet>();
+		Shotter.bullets = bulletsEne;
 		enemies = new ArrayList<Enemy>();
 		explosions = new ArrayList<Explosion>();
-
 		score = 0;
 
 		timer = new Timer(16, this);
@@ -62,8 +61,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		timer_enemy = new Timer(100, e -> spawnEnemy());
 		timer_enemy.start();
 		count = 0;
-		timer_hold = new Timer(60, e -> starShip.shot(bullets));
-
+		timer_hold = new Timer(60, e -> starShip.shot());
 		load();
 	}
 
@@ -79,6 +77,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 			enemies.add(new Triangle());
 		}
 		if (count == 40) {
+			enemies.add(new BigOne());
 			count = 0;
 		}
 	}
@@ -107,7 +106,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		starShip.shot(bullets);
+		starShip.shot();
 		timer_hold.start();
 	}
 
@@ -139,34 +138,54 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	}
 
 	public void posRefresh() {
+
 		bulletIterator = bullets.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
-			bullet.move();
+			bullet.act();
 			if (bullet.y < 0) {
 				bulletIterator.remove();
 			}
 		}
+
 		bulletIterator = bulletsEne.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
-			bullet.move();
+			bullet.act();
 			if (bullet.y > Setting.PANEL_HEIGHT || bullet.x > Setting.PANEL_WIDTH || bullet.x < -1 * Bullet.WIDTH) {
 				bulletIterator.remove();
 			}
 		}
+
 		enemyIterator = enemies.iterator();
 		while (enemyIterator.hasNext()) {
 			Enemy enemy = enemyIterator.next();
 			enemy.act();
-			if (enemy instanceof Shottable) {
-				((Shottable) enemy).shot(bulletsEne);
+			if(enemy instanceof Shotter) {
+				((Shotter) enemy).shot();
 			}
 		}
+
 	}
 
 	public void collision() {
-		bulletIterator = bullets.iterator();
+
+		enemyBulletCollision(enemies, bullets);
+
+		enemyStarShipCollision(enemies, starShip);
+
+		bulletStarShipCollision(bulletsEne, starShip);
+
+		explosions.removeIf(Explosion::shouldRemove);
+
+		if (!starShip.alive()) {
+			endGame();
+		}
+
+	}
+
+	public void enemyBulletCollision(List<Enemy> enemies, List<Bullet> bulletsEne) {
+		bulletIterator = bulletsEne.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
 			enemyIterator = enemies.iterator();
@@ -184,7 +203,9 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 				}
 			}
 		}
+	}
 
+	public void enemyStarShipCollision(List<Enemy> enemies, StarShip starShip) {
 		enemyIterator = enemies.iterator();
 		while (enemyIterator.hasNext()) {
 			Enemy enemy = enemyIterator.next();
@@ -194,7 +215,9 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 				enemyIterator.remove();
 			}
 		}
+	}
 
+	public void bulletStarShipCollision(List<Bullet> bullets, StarShip starShip) {
 		bulletIterator = bulletsEne.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = bulletIterator.next();
@@ -204,13 +227,6 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 				starShip.gotDamaged();
 			}
 		}
-
-		explosions.removeIf(Explosion::shouldRemove);
-
-		if (!starShip.alive()) {
-			endGame();
-		}
-
 	}
 
 	public void drawImage() {
@@ -237,7 +253,6 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 			explosion.render(myBuffer);
 			explosion.update();
 		}
-
 	}
 	
 	public void endGame() {

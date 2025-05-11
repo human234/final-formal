@@ -8,15 +8,11 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
-
 import javax.imageio.ImageIO;
-
-import abstract_interface.Enemy;
-import abstract_interface.Shottable;
+import abstract_interface.Shotter;
 import panelRelated.Setting;
 
-public class Triangle extends Enemy implements Shottable {
+public class Triangle extends Shotter {
 
 	private int dx, count;
 	private int attack;
@@ -103,7 +99,7 @@ public class Triangle extends Enemy implements Shottable {
 	}
 
 	@Override
-	public void shot(List<Bullet> bullets) {
+	public void shot() {
 		if (count == 10) {
 			attack = (int) (Math.random() * 10);
 			count = 0;

@@ -43,7 +43,7 @@ public class Bullet {
 
 	}
 
-	public void move() {
+	public void act() {
 		x += dx;
 		y += dy;
 	}

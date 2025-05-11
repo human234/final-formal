@@ -8,9 +8,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import abstract_interface.Enemy;
 import panelRelated.Setting;
 
@@ -74,10 +72,10 @@ public class Square extends Enemy {
 
 	public void drawShape(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		if(imageFrames != null) {
+		if (imageFrames != null) {
 			render(g);
 			update();
-		}else {
+		} else {
 			g2d.setStroke(new BasicStroke(4));
 			g2d.setColor(Color.RED);
 			g2d.fillRect(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);

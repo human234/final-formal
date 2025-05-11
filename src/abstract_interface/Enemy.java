@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 public abstract class Enemy{
+	
 	protected int health;
 	public int x, y;
 
@@ -16,5 +17,6 @@ public abstract class Enemy{
 	public abstract boolean alive();
 
 	public abstract void act();
+	
 
 }
