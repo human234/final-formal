@@ -18,7 +18,7 @@ public class Square extends Enemy {
 
 	private int dx;
 	private double dy, dy_culmu;
-	public static final int WIDTH = 32, HEIGHT = 32;
+	public static final int WIDTH = 50, HEIGHT = 50;
 	private boolean dir;
 	private static Image[] imageFrames;
 	private int currentFrame = 0, frameDelayCount = 0;
@@ -27,9 +27,10 @@ public class Square extends Enemy {
 	public static void loadFrams() {
 		try {
 			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Paranoid.png"));
-			imageFrames = new BufferedImage[4];
+			imageFrames = new Image[4];
 			for (int i = 0; i < 4; i++) {
-				imageFrames[i] = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

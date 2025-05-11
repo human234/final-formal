@@ -21,7 +21,7 @@ public class Triangle extends Enemy implements Shottable {
 	private int dx, count;
 	private int attack;
 
-	public static final int WIDTH = 32, HEIGHT = 32;
+	public static final int WIDTH = 40, HEIGHT = 40;
 	private static Image[] imageFrames;
 	private int currentFrame = 0, frameDelayCount = 0;
 	private final int FRAME_DELAY = 32;
@@ -29,9 +29,10 @@ public class Triangle extends Enemy implements Shottable {
 	public static void loadFrams() {
 		try {
 			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ligher.png"));
-			imageFrames = new BufferedImage[4];
+			imageFrames = new Image[4];
 			for (int i = 0; i < 4; i++) {
-				imageFrames[i] = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
