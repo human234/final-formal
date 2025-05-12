@@ -15,7 +15,7 @@ public class StartScreenPanel extends JPanel {
 	private JFrame frame;
 	public StartScreenPanel(JFrame frame) {
 		this.frame = frame;
-		SoundPlayer bgm = new SoundPlayer("/sound/startmusic.wav");
+		SoundPlayer bgm = new SoundPlayer("/startmusic.wav");
 		bgm.playOnceThenRepeat();
 		setPreferredSize(new Dimension(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT));
 		setLayout(new BorderLayout());

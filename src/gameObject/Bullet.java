@@ -25,7 +25,7 @@ public class Bullet {
 		if (type == 1) {
 			try {
 				image = ImageIO.read(getClass().getResourceAsStream("/bullet.png"));
-				SoundPlayer player = new SoundPlayer("/sound/shoot.wav");
+				SoundPlayer player = new SoundPlayer("/shoot.wav");
 				player.playOnce();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -33,7 +33,8 @@ public class Bullet {
 		} else if (type == 2) {
 			try {
 				image = ImageIO.read(getClass().getResourceAsStream("/enemybullet.png"));
-				SoundPlayer player = new SoundPlayer("/sound/shoot.wav");
+				SoundPlayer enemy = new SoundPlayer("/shoot.wav");
+				enemy.playOnce();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
