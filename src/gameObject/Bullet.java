@@ -12,16 +12,17 @@ import javax.sound.sampled.*;
 import javax.imageio.ImageIO;
 
 public class Bullet {
-	public int x, y, dx, dy;
+	public int x, y, dx, dy, damage;
 	public static final int WIDTH = 5;
 	public static final int HEIGHT = 10;
 	private Image image;
-	
-	public Bullet(int x, int y, int dx, int dy, int type) {
+
+	public Bullet(int x, int y, int dx, int dy, int damage, int type) {
 		this.x = x;
 		this.y = y;
 		this.dx = dx;
 		this.dy = dy;
+		this.damage = damage;
 		if (type == 1) {
 			try {
 				image = ImageIO.read(getClass().getResourceAsStream("/bullet.png"));
@@ -40,10 +41,9 @@ public class Bullet {
 		} else {
 			image = null;
 		}
-
 	}
 
-	public void move() {
+	public void act() {
 		x += dx;
 		y += dy;
 	}

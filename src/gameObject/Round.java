@@ -8,34 +8,20 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
-
 import javax.imageio.ImageIO;
-
-import abstract_interface.Enemy;
-import abstract_interface.Shottable;
+import abstract_interface.Shotter;
 import panelRelated.Setting;
 
-public class Round extends Enemy implements Shottable {
+public class Round extends Shotter {
 	private int dx, dy;
-	public static final int WIDTH = 40;
-	public static final int HEIGHT = 40;
+	public static final int WIDTH = 50;
+	public static final int HEIGHT = 50;
 	private int chDirCount, shotCount, chDirInterval;
 	private boolean firstStep;
 	private static Image[] imageFrames;
-	
-	public static void loadFrams() {
-		try {
-			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ninja.png"));
-			imageFrames = new Image[4];
-			for (int i = 0; i < 4; i++) {
-				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
-				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	private int currentFrame = 0, frameDelayCount = 0;
+	private final int FRAME_DELAY = 32;
+
 	public Round() {
 		firstStep = true;
 		health = 5;
@@ -53,6 +39,19 @@ public class Round extends Enemy implements Shottable {
 		chDirInterval = 100 + (int) (Math.random() * 100);
 		chDirCount = 0;
 		shotCount = 0;
+	}
+
+	public static void loadFrams() {
+		try {
+			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ninja.png"));
+			imageFrames = new Image[4];
+			for (int i = 0; i < 4; i++) {
+				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -101,16 +100,38 @@ public class Round extends Enemy implements Shottable {
 	}
 
 	public void drawShape(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setStroke(new BasicStroke(4));
-		g2d.setColor(Color.RED);
-		g2d.fillOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
-		g2d.setColor(Color.GRAY);
-		g2d.drawOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+		if (imageFrames != null) {
+			render(g);
+			update();
+		} else {
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setStroke(new BasicStroke(4));
+			g2d.setColor(Color.RED);
+			g2d.fillOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+			g2d.setColor(Color.GRAY);
+			g2d.drawOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
+		}
+	}
+
+	public void update() {
+		if (frameDelayCount < FRAME_DELAY) {
+			frameDelayCount++;
+		} else {
+			if (currentFrame < 3) {
+				currentFrame++;
+			} else {
+				currentFrame = 0;
+			}
+			frameDelayCount = 0;
+		}
+	}
+
+	public void render(Graphics g) {
+		g.drawImage(imageFrames[currentFrame], x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT, null);
 	}
 
 	@Override
-	public void shot(List<Bullet> bullets) {
+	public void shot() {
 		if (shotCount == 40) {
 			int xDir, yDir;
 			if (dx > 0) {
@@ -129,7 +150,7 @@ public class Round extends Enemy implements Shottable {
 			}
 			if (xDir != 0 || yDir != 0) {
 				try {
-					bullets.add(new Bullet(x, y, xDir, yDir, 2));
+					bullets.add(new Bullet(x, y, xDir, yDir, 5, 2));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -139,8 +160,13 @@ public class Round extends Enemy implements Shottable {
 	}
 
 	@Override
-	public void gotDamaged() {
-		health--;
+	public void gotDamaged(int damage) {
+		health -= damage;
+	}
+
+	@Override
+	public int getHealth() {
+		return health;
 	}
 
 	@Override
