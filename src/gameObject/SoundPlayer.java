@@ -14,7 +14,8 @@ public class SoundPlayer {
 
     public SoundPlayer(String pathInClasspath) {
         try {
-            InputStream audioSrc = SoundPlayer.class.getResourceAsStream(pathInClasspath);
+//        	System.out.println(SoundPlayer.class.getResource(pathInClasspath));
+        	InputStream audioSrc = SoundPlayer.class.getResourceAsStream(pathInClasspath);
             if (audioSrc == null) {
                 System.err.println("找不到音效：" + pathInClasspath);
                 return;

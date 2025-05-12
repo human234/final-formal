@@ -13,7 +13,7 @@ import abstract_interface.Shottable;
 public class StarShip implements Shottable {
 
 	public int x, y, health;
-	public static final int WIDTH = 60, HEIGHT = 60;
+	public static final int WIDTH = 20, HEIGHT = 20;
 	private static Image[] image;
 	public static List<Bullet> bullets;
 	private int currentFrame = 0;
@@ -31,11 +31,11 @@ public class StarShip implements Shottable {
 		try {
 			for (int i = 1; i <= 5; i++) {
 				BufferedImage origin = ImageIO.read(StarShip.class.getResource("/starship" + i + ".png"));
-				image[i - 1] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+				image[i - 1] = origin.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 			}
 			for (int i = 4; i >= 2; i--) {
 				BufferedImage origin = ImageIO.read(StarShip.class.getResource("/starship" + i + ".png"));
-				image[9 - i] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+				image[9 - i] = origin.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
