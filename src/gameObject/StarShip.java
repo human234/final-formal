@@ -7,15 +7,13 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
-
 import javax.imageio.ImageIO;
-
 import abstract_interface.Shottable;
 
 public class StarShip implements Shottable {
 
 	public int x, y, health;
-	public static final int WIDTH = 20, HEIGHT = 20;
+	public static final int WIDTH = 60, HEIGHT = 60;
 	private static Image[] image;
 	public static List<Bullet> bullets;
 	private int currentFrame = 0;
@@ -29,14 +27,15 @@ public class StarShip implements Shottable {
 	}
 
 	public static void loadImaages() {
+		image = new Image[8];
 		try {
 			for (int i = 1; i <= 5; i++) {
 				BufferedImage origin = ImageIO.read(StarShip.class.getResource("/starship" + i + ".png"));
 				image[i - 1] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			}
-			for (int i = 4; i >= 2; i++) {
+			for (int i = 4; i >= 2; i--) {
 				BufferedImage origin = ImageIO.read(StarShip.class.getResource("/starship" + i + ".png"));
-				image[10 - i] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+				image[9 - i] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,7 +50,8 @@ public class StarShip implements Shottable {
 		g2d.translate(x, y);
 		g2d.rotate(angle);
 
-		g.drawImage(image[currentFrame], x, y, x - WIDTH / 2, y - HEIGHT / 2, null);
+		g.drawImage(image[currentFrame], -image[currentFrame].getWidth(null) / 2,
+				-image[currentFrame].getHeight(null) / 2, null);
 
 		g2d.setTransform(old);
 	}
@@ -96,7 +96,7 @@ public class StarShip implements Shottable {
 	}
 
 	public void update() {
-		if (currentFrame < 8) {
+		if (currentFrame < 6) {
 			currentFrame++;
 		} else {
 			currentFrame = 0;

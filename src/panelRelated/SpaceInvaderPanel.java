@@ -49,7 +49,6 @@ public class SpaceInvaderPanel extends JPanel
 		addKeyListener(this);
 		myImage = new BufferedImage(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		myBuffer = myImage.getGraphics();
-		Explosion.loadFrames();
 
 		starShip = new StarShip(Setting.PANEL_WIDTH / 2, Setting.PANEL_HEIGHT - 30);
 		bullets = new ArrayList<Bullet>();
@@ -313,6 +312,8 @@ public class SpaceInvaderPanel extends JPanel
 		Round.loadFrams();
 		Square.loadFrams();
 		Triangle.loadFrams();
+		StarShip.loadImaages();
+		Explosion.loadFrames();
 	}
 
 	public void healthDisplay(Graphics g) {
