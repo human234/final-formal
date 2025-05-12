@@ -261,8 +261,8 @@ public class SpaceInvaderPanel extends JPanel
 	public void drawImage() {
 
 		parallax.drawShape(myBuffer);
-
 		myBuffer.setColor(Color.white);
+
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
 		starShip.drawShape(myBuffer);
