@@ -22,6 +22,19 @@ public class Square extends Enemy {
 	private int currentFrame = 0, frameDelayCount = 0;
 	private final int FRAME_DELAY = 32;
 
+	public Square() {
+		health = 12;
+		x = -1 * WIDTH / 2 + Setting.PANEL_WIDTH * (int) (Math.random() * 2);
+		y = 100;
+		dx = 8;
+		dir = true;
+		if (x > Setting.PANEL_WIDTH) {
+			dir = !dir;
+			dx *= -1;
+		}
+		dy = 0.9;
+	}
+
 	public static void loadFrams() {
 		try {
 			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Paranoid.png"));
@@ -33,19 +46,6 @@ public class Square extends Enemy {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public Square() {
-		health = 10;
-		x = -1 * WIDTH / 2 + Setting.PANEL_WIDTH * (int) (Math.random() * 2);
-		y = 100;
-		dx = 8;
-		dir = true;
-		if (x > Setting.PANEL_WIDTH) {
-			dir = !dir;
-			dx *= -1;
-		}
-		dy = 0.9;
 	}
 
 	public void act() {
@@ -102,8 +102,13 @@ public class Square extends Enemy {
 	}
 
 	@Override
-	public void gotDamaged() {
-		health--;
+	public void gotDamaged(int damage) {
+		health -= damage;
+	}
+
+	@Override
+	public int getHealth() {
+		return health;
 	}
 
 	@Override

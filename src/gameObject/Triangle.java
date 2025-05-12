@@ -22,6 +22,20 @@ public class Triangle extends Shotter {
 	private int currentFrame = 0, frameDelayCount = 0;
 	private final int FRAME_DELAY = 32;
 
+	public Triangle() {
+		health = 5;
+		count = 0;
+		x = -1 * WIDTH / 2 + Setting.PANEL_WIDTH * (int) (Math.random() * 2);
+		double reg = Math.random();
+		if (reg < 0.33) {
+			y = 30;
+		} else if (reg < 0.66) {
+			y = 70;
+		} else {
+			y = 110;
+		}
+	}
+
 	public static void loadFrams() {
 		try {
 			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ligher.png"));
@@ -32,20 +46,6 @@ public class Triangle extends Shotter {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	public Triangle() {
-		health = 3;
-		count = 0;
-		x = -1 * WIDTH / 2 + Setting.PANEL_WIDTH * (int) (Math.random() * 2);
-		double reg = Math.random();
-		if (reg < 0.33) {
-			y = 30;
-		} else if (reg < 0.66) {
-			y = 70;
-		} else {
-			y = 110;
 		}
 	}
 
@@ -106,9 +106,9 @@ public class Triangle extends Shotter {
 		}
 		if (attack == 9) {
 			try {
-				bullets.add(new Bullet(x, y, -1, 5, 2));
-				bullets.add(new Bullet(x, y, 0, 5, 2));
-				bullets.add(new Bullet(x, y, 1, 5, 2));
+				bullets.add(new Bullet(x, y, -1, 5, 3, 2));
+				bullets.add(new Bullet(x, y, 0, 5, 3, 2));
+				bullets.add(new Bullet(x, y, 1, 5, 3, 2));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -117,8 +117,13 @@ public class Triangle extends Shotter {
 	}
 
 	@Override
-	public void gotDamaged() {
-		health--;
+	public void gotDamaged(int damage) {
+		health -= damage;
+	}
+
+	@Override
+	public int getHealth() {
+		return health;
 	}
 
 	@Override

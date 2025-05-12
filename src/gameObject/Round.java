@@ -22,19 +22,6 @@ public class Round extends Shotter {
 	private int currentFrame = 0, frameDelayCount = 0;
 	private final int FRAME_DELAY = 32;
 
-	public static void loadFrams() {
-		try {
-			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ninja.png"));
-			imageFrames = new Image[4];
-			for (int i = 0; i < 4; i++) {
-				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
-				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public Round() {
 		firstStep = true;
 		health = 5;
@@ -52,6 +39,19 @@ public class Round extends Shotter {
 		chDirInterval = 100 + (int) (Math.random() * 100);
 		chDirCount = 0;
 		shotCount = 0;
+	}
+
+	public static void loadFrams() {
+		try {
+			BufferedImage spriteSheet = ImageIO.read(Round.class.getResource("/Ninja.png"));
+			imageFrames = new Image[4];
+			for (int i = 0; i < 4; i++) {
+				BufferedImage sub = spriteSheet.getSubimage(32 * i, 0, 32, 32);
+				imageFrames[i] = sub.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class Round extends Shotter {
 			}
 			if (xDir != 0 || yDir != 0) {
 				try {
-					bullets.add(new Bullet(x, y, xDir, yDir, 2));
+					bullets.add(new Bullet(x, y, xDir, yDir, 5, 2));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -160,8 +160,13 @@ public class Round extends Shotter {
 	}
 
 	@Override
-	public void gotDamaged() {
-		health--;
+	public void gotDamaged(int damage) {
+		health -= damage;
+	}
+
+	@Override
+	public int getHealth() {
+		return health;
 	}
 
 	@Override

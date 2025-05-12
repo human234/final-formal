@@ -1,130 +1,111 @@
 package gameObject;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.io.IOException;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.List;
+
 import javax.imageio.ImageIO;
+
 import abstract_interface.Shottable;
 
 public class StarShip implements Shottable {
 
 	public int x, y, health;
 	public static final int WIDTH = 20, HEIGHT = 20;
-	private Image image;
+	private static Image[] image;
 	public static List<Bullet> bullets;
+	private int currentFrame = 0;
+	private double angle = 0;
+	private boolean rotateLeft = false, rotateRight = false;
 
 	public StarShip(int x, int y) {
 		health = 100;
 		this.x = x;
 		this.y = y;
+	}
+
+	public static void loadImaages() {
 		try {
-			image = ImageIO.read(getClass().getResourceAsStream("/starship.png"));
-		} catch (IOException e) {
+			for (int i = 1; i <= 5; i++) {
+				BufferedImage origin = ImageIO.read(StarShip.class.getResource("/starship" + i + ".png"));
+				image[i - 1] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			}
+			for (int i = 4; i >= 2; i++) {
+				BufferedImage origin = ImageIO.read(StarShip.class.getResource("/starship" + i + ".png"));
+				image[10 - i] = origin.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void drawShape(Graphics g) {
-		d = d + 1;
+		update();
 		Graphics2D g2d = (Graphics2D) g;
-		if (image != null) {
-			if (d == 1) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 2) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship2.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 3) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship3.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 4) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship4.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 5) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship5.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 6) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship4.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 7) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship3.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-			}
-			if (d == 7) {
-				try {
-					image = ImageIO.read(getClass().getResourceAsStream("/starship2.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
-				d = 1;
-			}
-		} else {
-			g2d.setStroke(new BasicStroke(4));
-			g2d.setColor(Color.GRAY);
-			int[] x_outline = { x - WIDTH / 2, x, x + WIDTH / 2 };
-			int[] y_outline = { y + HEIGHT / 2, y - HEIGHT / 2, y + HEIGHT / 2 };
-			g2d.fillPolygon(x_outline, y_outline, 3);
-			g2d.setColor(Color.blue);
-			g2d.drawPolygon(x_outline, y_outline, 3);
-		}
+		AffineTransform old = g2d.getTransform();
+
+		g2d.translate(x, y);
+		g2d.rotate(angle);
+
+		g.drawImage(image[currentFrame], x, y, x - WIDTH / 2, y - HEIGHT / 2, null);
+
+		g2d.setTransform(old);
 	}
 
 	@Override
 	public void shot() {
-		bullets.add(new Bullet(x - 6, y, 0, -10, 1));
-		bullets.add(new Bullet(x + 6, y, 0, -10, 1));
+		double speed = 10;
+
+		double dx = Math.sin(angle) * speed;
+		double dy = -Math.cos(angle) * speed;
+
+		int offset = 10;
+
+		double leftX = x + Math.cos(angle) * -offset;
+		double leftY = y + Math.sin(angle) * -offset;
+		double rightX = x + Math.cos(angle) * offset;
+		double rightY = y + Math.sin(angle) * offset;
+
+		bullets.add(new Bullet((int) leftX, (int) leftY, (int) dx, (int) dy, 1, 1));
+		bullets.add(new Bullet(x, y, (int) dx, (int) dy, 1, 1));
+		bullets.add(new Bullet((int) rightX, (int) rightY, (int) dx, (int) dy, 1, 1));
 	}
 
 	public Rectangle getBounds() {
 		return new Rectangle(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
 	}
 
-	public void gotDamaged() {
-		health--;
+	public void gotDamaged(int damage) {
+		health -= damage;
 	}
 
 	public boolean alive() {
 		return health > 0;
+	}
+
+	public void setRotateLeft(boolean state) {
+		rotateLeft = state;
+	}
+
+	public void setRotateRight(boolean state) {
+		rotateRight = state;
+	}
+
+	public void update() {
+		if (currentFrame < 8) {
+			currentFrame++;
+		} else {
+			currentFrame = 0;
+		}
+		if (rotateLeft) {
+			angle -= Math.toRadians(2);
+		} else if (rotateRight) {
+			angle += Math.toRadians(2);
+		}
 	}
 
 }

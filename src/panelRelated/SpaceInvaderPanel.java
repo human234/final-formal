@@ -16,12 +16,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMotionListener, MouseListener {
+public class SpaceInvaderPanel extends JPanel
+		implements ActionListener, MouseMotionListener, MouseListener, KeyListener {
 
 	private JFrame frame;
 	private BufferedImage myImage;
@@ -43,6 +46,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		setFocusable(true);
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addKeyListener(this);
 		myImage = new BufferedImage(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		myBuffer = myImage.getGraphics();
 		Explosion.loadFrames();
@@ -65,19 +69,23 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		load();
 	}
 
+	public void addNotify() {
+		super.addNotify();
+		requestFocusInWindow();
+	}
+
 	public void spawnEnemy() {
 		count++;
 		if (count == 20 || count == 30 || count == 40) {
 			enemies.add(new Round());
 		}
-		if (count <= 5) {
+		if (count <= 8) {
 			enemies.add(new Square());
 		}
-		if (count % 10 == 0) {
+		if (count % 8 == 0) {
 			enemies.add(new Triangle());
 		}
 		if (count == 40) {
-			enemies.add(new BigOne());
 			count = 0;
 		}
 	}
@@ -128,6 +136,28 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	}
 
 	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_A) {
+			starShip.setRotateLeft(true);
+		} else if (e.getKeyCode() == KeyEvent.VK_S) {
+			starShip.setRotateRight(true);
+		}
+	}
+
+	@Override
+
+	public void keyReleased(KeyEvent e) {
+		starShip.setRotateLeft(false);
+		starShip.setRotateRight(false);
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		posRefresh();
@@ -161,7 +191,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		while (enemyIterator.hasNext()) {
 			Enemy enemy = enemyIterator.next();
 			enemy.act();
-			if(enemy instanceof Shotter) {
+			if (enemy instanceof Shotter) {
 				((Shotter) enemy).shot();
 			}
 		}
@@ -194,7 +224,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 				if (enemy.getBounds().intersects(bullet.getBounds())) {
 					addExplosion(enemy.getBounds().intersection(bullet.getBounds()));
 					bulletIterator.remove();
-					enemy.gotDamaged();
+					enemy.gotDamaged(bullet.damage);
 					if (!enemy.alive()) {
 						enemyIterator.remove();
 						score += 10;
@@ -211,7 +241,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 			Enemy enemy = enemyIterator.next();
 			if (enemy.getBounds().intersects(starShip.getBounds())) {
 				addExplosion(enemy.getBounds().intersection(starShip.getBounds()));
-				starShip.gotDamaged();
+				starShip.gotDamaged(enemy.getHealth());
 				enemyIterator.remove();
 			}
 		}
@@ -224,7 +254,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 			if (bullet.getBounds().intersects(starShip.getBounds())) {
 				addExplosion(bullet.getBounds().intersection(starShip.getBounds()));
 				bulletIterator.remove();
-				starShip.gotDamaged();
+				starShip.gotDamaged(bullet.damage);
 			}
 		}
 	}
@@ -286,25 +316,26 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	}
 
 	public void healthDisplay(Graphics g) {
-		// 血條底框（灰色）
+		// è¡€æ¢�åº•æ¡†ï¼ˆç�°è‰²ï¼‰
 		myBuffer.setColor(Color.GRAY);
 		myBuffer.fillRect(10, 30, 100, 10);
 
-		// 根據血量計算比例
-		int hpWidth = Math.max(0, Math.min(starShip.health, 100)); // 限制在 0~100
+		// æ ¹æ“šè¡€é‡�è¨ˆç®—æ¯”ä¾‹
+		int hpWidth = Math.max(0, Math.min(starShip.health, 100)); // é™�åˆ¶åœ¨ 0~100
 		Color hpColor = Color.GREEN;
 		if (hpWidth <= 30)
 			hpColor = Color.RED;
 		else if (hpWidth <= 60)
 			hpColor = Color.ORANGE;
 
-		// 血量條（變色）
+		// è¡€é‡�æ¢�ï¼ˆè®Šè‰²ï¼‰
 		myBuffer.setColor(hpColor);
 		myBuffer.fillRect(10, 30, hpWidth, 10);
 
-		// 白色外框與文字
+		// ç™½è‰²å¤–æ¡†èˆ‡æ–‡å­—
 		myBuffer.setColor(Color.WHITE);
 		myBuffer.drawRect(10, 30, 100, 10);
 		myBuffer.drawString("HP: " + starShip.health, 115, 40);
 	}
+
 }
