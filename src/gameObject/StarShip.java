@@ -112,7 +112,8 @@ public class StarShip implements Shottable {
 
 	@Override
 	public void shot(List<Bullet> bullets) {
-		bullets.add(new Bullet(x, y, 0, -10, 1));
+		bullets.add(new Bullet(x - 6, y, 0, -10, 1));
+		bullets.add(new Bullet(x + 6, y, 0, -10, 1));
 	}
 
 	public Rectangle getBounds() {

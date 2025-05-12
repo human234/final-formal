@@ -17,7 +17,7 @@ import panelRelated.Setting;
 public class Square extends Enemy {
 
 	private int dx;
-	private double dy;
+	private double dy, dy_culmu;
 	public static final int WIDTH = 30, HEIGHT = 30;
 	private boolean dir;
 	private static Image[] imageFrames;
@@ -35,17 +35,16 @@ public class Square extends Enemy {
 		}
 	}
 	public Square() {
-		health = 5;
+		health = 10;
 		x = -1 * WIDTH / 2 + Setting.PANEL_WIDTH * (int) (Math.random() * 2);
 		y = 100;
-		if (x < 0) {
-			dir = true;
-			dx = 5;
-		} else {
-			dir = false;
-			dx = -5;
+		dx = 8;
+		dir = true;
+		if(x > Setting.PANEL_WIDTH) {
+			dir = !dir;
+			dx *= -1;
 		}
-		dy = 0.15;
+		dy = 0.9;
 	}
 
 	public void act() {
@@ -57,11 +56,11 @@ public class Square extends Enemy {
 			dx *= -1;
 			dir = !dir;
 		}
-		if (dy < 1) {
-			dy += 0.34;
+		if (dy_culmu < 1) {
+			dy_culmu += dy;
 		} else {
 			y += 1;
-			dy = 0;
+			dy_culmu -= 1;
 		}
 		x += dx;
 	}

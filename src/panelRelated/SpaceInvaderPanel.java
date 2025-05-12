@@ -37,7 +37,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	private Timer timer, timer_hold, timer_enemy;
 	private int score, count;
 	private ParallaxBackground parallax;
-	
+
 	public SpaceInvaderPanel(JFrame frame) {
 
 		this.frame = frame;
@@ -59,24 +59,26 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 
 		timer = new Timer(16, this);
 		timer.start();
-		timer_enemy = new Timer(200, e -> spawnEnemy());
+		timer_enemy = new Timer(100, e -> spawnEnemy());
 		timer_enemy.start();
 		count = 0;
 		timer_hold = new Timer(60, e -> starShip.shot(bullets));
+
+		loadBackground();
 	}
 
 	public void spawnEnemy() {
 		count++;
-		if (count == 15 || count == 20) {
-			enemies.add(new Triangle());
+		if (count == 20 || count == 30 || count == 40) {
+			enemies.add(new Round());
 		}
 		if (count <= 5) {
 			enemies.add(new Square());
 		}
 		if (count % 10 == 0) {
-			enemies.add(new Round());
+			enemies.add(new Triangle());
 		}
-		if (count == 20) {
+		if (count == 40) {
 			count = 0;
 		}
 	}
@@ -212,10 +214,9 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	}
 
 	public void drawImage() {
+
 		parallax.drawShape(myBuffer);
-		myBuffer.setColor(Color.DARK_GRAY);
-		myBuffer.fillRect(0, 0, getWidth(), getHeight());
-		myBuffer.setColor(Color.WHITE);
+		myBuffer.setColor(Color.white);
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
 		starShip.drawShape(myBuffer);
@@ -253,6 +254,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		explosions
 				.add(new Explosion(intersection.x + intersection.width / 2, intersection.y + intersection.height / 2));
 	}
+	
 	public void load() {
 		String[] bkPaths = { "/parallax-space-backgound.png", "/parallax-space-stars.png" };
 		float[] bkSpeeds = { 2.2f, 4.3f };

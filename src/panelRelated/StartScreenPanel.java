@@ -20,7 +20,7 @@ public class StartScreenPanel extends JPanel {
 		setPreferredSize(new Dimension(Setting.PANEL_WIDTH, Setting.PANEL_HEIGHT));
 		setLayout(new BorderLayout());
 
-		ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/background.jpg"));
+		ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/startBackground.jpg"));
 		JLabel backgroundLabel = new JLabel(backgroundImage);
 		backgroundLabel.setLayout(null);
 
