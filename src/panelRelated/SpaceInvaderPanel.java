@@ -36,7 +36,8 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	private List<Explosion> explosions;
 	private Timer timer, timer_hold, timer_enemy;
 	private int score, count;
-
+	private ParallaxBackground parallax;
+	
 	public SpaceInvaderPanel(JFrame frame) {
 
 		this.frame = frame;
@@ -211,13 +212,14 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	}
 
 	public void drawImage() {
+		parallax.drawShape(myBuffer);
 		myBuffer.setColor(Color.DARK_GRAY);
 		myBuffer.fillRect(0, 0, getWidth(), getHeight());
 		myBuffer.setColor(Color.WHITE);
 		myBuffer.setFont(new Font("Arial", Font.BOLD, 20));
 		myBuffer.drawString("Score: " + score, 10, 20);
 		starShip.drawShape(myBuffer);
-
+		
 		for (Bullet bullet : bulletsEne) {
 			bullet.drawShape(myBuffer);
 		}
@@ -233,7 +235,7 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 		}
 
 	}
-
+	
 	public void endGame() {
 		bullets.clear();
 		bulletsEne.clear();
@@ -250,5 +252,16 @@ public class SpaceInvaderPanel extends JPanel implements ActionListener, MouseMo
 	public void addExplosion(Rectangle intersection) {
 		explosions
 				.add(new Explosion(intersection.x + intersection.width / 2, intersection.y + intersection.height / 2));
+	}
+	public void load() {
+		String[] bkPaths = { "/parallax-space-backgound.png", "/parallax-space-stars.png" };
+		float[] bkSpeeds = { 2.2f, 4.3f };
+		parallax = new ParallaxBackground(bkPaths, bkSpeeds);
+		parallax.addObject("/parallax-space-big-planet.png", 2.1f, 3.2f, 200, 180);
+		parallax.addObject("/parallax-space-ring-planet.png", 3.2f, 2.4f, 120, 240);
+		parallax.addObject("/parallax-space-far-planets.png", 5.3f, 2.6f, 300, 140);
+		Round.loadFrams();
+		Square.loadFrams();
+		Triangle.loadFrams();
 	}
 }

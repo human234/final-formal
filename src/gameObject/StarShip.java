@@ -18,7 +18,7 @@ public class StarShip implements Shottable {
 	public int x, y, health;
 	public static final int WIDTH = 20, HEIGHT = 20;
 	private Image image;
-
+	private int d = 1;
 	public StarShip(int x, int y) {
 		health = 10;
 		this.x = x;
@@ -31,9 +31,74 @@ public class StarShip implements Shottable {
 	}
 
 	public void drawShape(Graphics g) {
+		d = d + 1;
 		Graphics2D g2d = (Graphics2D) g;
 		if (image != null) {
-			g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			if (d == 1) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 2) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship2.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 3) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship3.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 4) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship4.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 5) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship5.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 6) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship4.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 7) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship3.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+			}
+			if (d == 7) {
+				try {
+					image = ImageIO.read(getClass().getResourceAsStream("/starship2.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				g2d.drawImage(image, x - image.getWidth(null) / 2, y - image.getHeight(null) / 2, null);
+				d = 1;
+			}
 		} else {
 			g2d.setStroke(new BasicStroke(4));
 			g2d.setColor(Color.GRAY);

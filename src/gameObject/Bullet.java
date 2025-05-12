@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.File;
 import java.io.IOException;
-
+import java.io.InputStream;
+import gameObject.SoundPlayer;
+import javax.sound.sampled.*;
 import javax.imageio.ImageIO;
 
 public class Bullet {
@@ -13,7 +16,7 @@ public class Bullet {
 	public static final int WIDTH = 5;
 	public static final int HEIGHT = 10;
 	private Image image;
-
+	
 	public Bullet(int x, int y, int dx, int dy, int type) {
 		this.x = x;
 		this.y = y;
@@ -22,12 +25,15 @@ public class Bullet {
 		if (type == 1) {
 			try {
 				image = ImageIO.read(getClass().getResourceAsStream("/bullet.png"));
+				SoundPlayer player = new SoundPlayer("/sound/shoot.wav");
+				player.playOnce();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else if (type == 2) {
 			try {
 				image = ImageIO.read(getClass().getResourceAsStream("/enemybullet.png"));
+				SoundPlayer player = new SoundPlayer("/sound/shoot.wav");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

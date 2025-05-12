@@ -6,13 +6,13 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class Explosion {
-    private static final int FRAME_SIZE = 256;  // æ¯å€‹å­åœ–çš„å¤§å°
+    private static final int FRAME_SIZE = 256;  // ¨C­Ó¤l¹Ïªº¤j¤p
     private static final int SPRITE_COLS = 8;
     private static final int SPRITE_ROWS = 8;
     private static final int TOTAL_FRAMES = SPRITE_COLS * SPRITE_ROWS;
 
-    private int x, y;              // çˆ†ç‚¸ä¸­å¿ƒä½ç½®
-    private int currentFrame = 0;  // ç•¶å‰æ’­æ”¾çš„å¹€
+    private int x, y;              // Ãz¬µ¤¤¤ß¦ì¸m
+    private int currentFrame = 0;  // ·í«e¼½©ñªº´V
     private boolean isFinished = false;
 
     private static BufferedImage[] explosionFrames = null;
