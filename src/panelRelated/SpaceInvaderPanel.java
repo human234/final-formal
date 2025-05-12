@@ -314,6 +314,7 @@ public class SpaceInvaderPanel extends JPanel
 		Triangle.loadFrams();
 		StarShip.loadImaages();
 		Explosion.loadFrames();
+		Bullet.loadImage();
 	}
 
 	public void healthDisplay(Graphics g) {

@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -21,6 +22,7 @@ public class Round extends Shotter {
 	private static Image[] imageFrames;
 	private int currentFrame = 0, frameDelayCount = 0;
 	private final int FRAME_DELAY = 32;
+	private double angle = 0;
 
 	public Round() {
 		firstStep = true;
@@ -100,23 +102,14 @@ public class Round extends Shotter {
 	}
 
 	public void drawShape(Graphics g) {
-		if (imageFrames != null) {
-			render(g);
-			update();
-		} else {
-			Graphics2D g2d = (Graphics2D) g;
-			g2d.setStroke(new BasicStroke(4));
-			g2d.setColor(Color.RED);
-			g2d.fillOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
-			g2d.setColor(Color.GRAY);
-			g2d.drawOval(x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT);
-		}
+		render(g);
+		update();
+
 	}
 
 	public void update() {
-		if (frameDelayCount < FRAME_DELAY) {
-			frameDelayCount++;
-		} else {
+		frameDelayCount++;
+		if (frameDelayCount > FRAME_DELAY) {
 			if (currentFrame < 3) {
 				currentFrame++;
 			} else {
@@ -124,10 +117,17 @@ public class Round extends Shotter {
 			}
 			frameDelayCount = 0;
 		}
+		angle += Math.toRadians(5);
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(imageFrames[currentFrame], x - WIDTH / 2, y - HEIGHT / 2, WIDTH, HEIGHT, null);
+		Graphics2D g2d = (Graphics2D) g;
+		AffineTransform old = g2d.getTransform();
+
+		g2d.translate(x, y);
+		g2d.rotate(angle);
+		g2d.drawImage(imageFrames[currentFrame], -WIDTH / 2, -HEIGHT / 2, null);
+		g2d.setTransform(old);
 	}
 
 	@Override
