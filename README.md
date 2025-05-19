@@ -17,7 +17,7 @@
 
 
 ## 報告影片連結
-[video](請把影片的URL貼在這裡謝謝) 
+[video](https://youtu.be/Rl48MMeYZEw?si=VbED8X1YDgXeLzZg) 
 
 ## 遊戲操作說明
 滑鼠控制飛船移動，按住發射子彈，鍵盤a和z控制左右旋轉。
